@@ -1,0 +1,51 @@
+# Control de versiones
+.git
+.gitignore
+
+# Configuración de Docker
+.dockerignore
+Dockerfile
+
+# Entornos virtuales locales
+.venv/
+venv/
+env/
+ENV/
+
+# Caché y archivos compilados de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Archivos de entorno y credenciales sensibles locales
+.env
+.env.*
+serviceAccountKey.json
+*.pem
+*.key
+
+# Archivos de documentación y pruebas innecesarios en la imagen
+README.md
+tests/
+docs/
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos del sistema operativo
+.DS_Store
+.DS_Store?
+._*
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+
