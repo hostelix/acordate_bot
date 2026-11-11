@@ -17,14 +17,14 @@ class HealthCheckHandler(http.server.SimpleHTTPRequestHandler):
 
 
 def start_health_server():
-    """Inicia un servidor HTTP ligero en un hilo independiente para responder a Koyeb."""
+    """Inicia un servidor HTTP ligero en un hilo independiente para responder a Render / pings."""
     try:
         # Permitir reutilizar la dirección rápidamente si se reinicia el proceso
         socketserver.TCPServer.allow_reuse_address = True
         server = socketserver.TCPServer(("0.0.0.0", PORT), HealthCheckHandler)
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
-        logger.info(f"🌐 Servidor de Health Check activo en el puerto {PORT} (para Koyeb)")
+        logger.info(f"🌐 Servidor de Health Check activo en el puerto {PORT} (para Render)")
     except Exception as e:
         logger.error(f"Error al iniciar servidor de health check: {e}")
 

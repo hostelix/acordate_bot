@@ -40,8 +40,8 @@ except Exception:
 NOTIFICATION_HOUR = int(os.getenv("NOTIFICATION_HOUR", "9"))
 NOTIFICATION_MINUTE = int(os.getenv("NOTIFICATION_MINUTE", "0"))
 
-# Puerto para health-check de Koyeb
-PORT = int(os.getenv("PORT", "8000"))
+# Puerto para health-check (Render usa 10000 por defecto)
+PORT = int(os.getenv("PORT", "10000"))
 
 # Credenciales de Firebase
 FIREBASE_CREDENTIALS_PATH = os.getenv("FIREBASE_CREDENTIALS_PATH", "./serviceAccountKey.json").strip()

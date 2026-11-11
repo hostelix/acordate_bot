@@ -50,7 +50,26 @@ def parse_flexible_date(text: str) -> tuple[str | None, str | None]:
                 except ValueError:
                     return None, f"Día o mes inválido en '{cleaned}'."
 
-    return None, "Formato no reconocido. Usa por ejemplo `25/11` o `25/11/2026`."
+    # Formato solo día del mes (ej. "25" o "5")
+    if cleaned.isdigit():
+        day = int(cleaned)
+        if 1 <= day <= 31:
+            try:
+                # Probar día en el mes actual
+                target_date = datetime(today.year, today.month, day).date()
+                if target_date < today:
+                    # Si ya pasó este mes, calcular para el próximo mes
+                    m = today.month + 1
+                    y = today.year
+                    if m > 12:
+                        m = 1
+                        y += 1
+                    target_date = datetime(y, m, day).date()
+                return target_date.strftime("%Y-%m-%d"), None
+            except ValueError:
+                pass
+
+    return None, "Formato no reconocido. Usa por ejemplo `25`, `25/11` o `25/11/2026`."
 
 
 @restricted

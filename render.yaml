@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: acordate-bot
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m src.main
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: ALLOWED_USER_IDS
+        sync: false
+      - key: FIREBASE_CREDENTIALS_JSON
+        sync: false
+      - key: TIMEZONE
+        value: America/La_Paz
+      - key: NOTIFICATION_HOUR
+        value: "9"
+      - key: NOTIFICATION_MINUTE
+        value: "0"
+

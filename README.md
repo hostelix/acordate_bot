@@ -1,20 +1,20 @@
 # 🤖 Acordate Bot - Recordatorio de Vencimientos y Pagos
 
 Bot personal de Telegram diseñado para gestionar y recordar el pago de cuotas de **tarjetas de crédito, préstamos bancarios y créditos en general**.
-Utiliza **Google Cloud Firestore** como base de datos en la nube y está optimizado para desplegarse **100% GRATIS 24/7 en Koyeb** (Eco Tier) sin requerir tarjeta de crédito.
+Utiliza **Google Cloud Firestore** como base de datos en la nube y está optimizado para desplegarse **100% GRATIS 24/7 en Render (Free Web Service)** sin costo.
 
 ---
 
 ## 🚀 Características
 
 - 🔔 **Alertas preventivas automáticas:** Notificación a Telegram **1 día antes** del vencimiento a la hora configurada (ej. 09:00 AM).
-- 🔁 **Soporte para cuotas recurrentes:** Para tarjetas y servicios mensuales; al marcar como pagada, avanza automáticamente al mes siguiente.
+- 🔁 **Soporte para cuotas recurrentes:** Para tarjetas y préstamos mensuales; al marcar como pagada, avanza automáticamente al mes siguiente.
 - 📋 **Semáforo visual en `/listar`:**
   - 🔴 Vencida o vence hoy
   - 🟡 Vence mañana o en pocos días
   - 🟢 Vencimientos lejanos
 - 🔒 **Acceso personal restringido:** Whitelist mediante `ALLOWED_USER_IDS` para que nadie más pueda usar tu bot.
-- 🌐 **Koyeb Health-Check integrado:** Servidor HTTP ligero interno en el puerto `8000` para mantener el servicio activo y saludable en Koyeb sin configuraciones extra.
+- 🌐 **Health-Check HTTP integrado:** Servidor web ligero en el puerto `$PORT` (`10000` por defecto en Render) listo para mantener el servicio activo.
 
 ---
 
@@ -69,9 +69,7 @@ Utiliza **Google Cloud Firestore** como base de datos en la nube y está optimiz
 
 ---
 
-## ☁️ Despliegue 100% Gratis en Koyeb (24/7)
-
-Koyeb ofrece un nivel gratuito (*Free Eco Tier*) que permite mantener un servicio web corriendo continuamente.
+## ☁️ Despliegue 100% Gratis en Render (24/7)
 
 ### Paso 1: Subir el proyecto a GitHub
 ```bash
@@ -84,22 +82,40 @@ git push -u origin main
 ```
 *(Nota: `.gitignore` ya está configurado para que nunca se suban tu `.env` ni tu `serviceAccountKey.json`)*.
 
-### Paso 2: Crear el servicio en Koyeb
-1. Regístrate o inicia sesión en [Koyeb.com](https://www.koyeb.com/).
-2. Haz clic en **Create Service** y selecciona **GitHub**.
-3. Selecciona tu repositorio `acordate_bot`.
-4. En **Type of deployment**, selecciona **Dockerfile** o **Buildpack** (ambos están configurados).
-5. En la sección **Instance**, elige la gratuita: **Nano (Eco)**.
-6. En **Environment variables**, agrega las siguientes:
+---
+
+### Paso 2: Crear el Web Service en Render
+1. Regístrate o inicia sesión en [Render.com](https://render.com/).
+2. Haz clic en **New + > Web Service**.
+3. Conecta tu repositorio de GitHub `acordate_bot`.
+4. Render detectará automáticamente el archivo `render.yaml` o puedes configurarlo manualmente:
+   - **Name:** `acordate-bot`
+   - **Runtime:** `Python 3`
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `python -m src.main`
+   - **Instance Type:** `Free`
+5. En la sección **Environment Variables**, añade:
    - `TELEGRAM_BOT_TOKEN`: Tu token de Telegram.
    - `ALLOWED_USER_IDS`: Tu ID numérico de Telegram.
-   - `TIMEZONE`: Tu zona horaria (ej. `America/La_Paz` o `America/Argentina/Buenos_Aires`).
-   - `NOTIFICATION_HOUR`: `9` (hora de la alerta matutina).
-   - `NOTIFICATION_MINUTE`: `0`.
-   - `FIREBASE_CREDENTIALS_JSON`: Abre tu archivo `serviceAccountKey.json` descargado de Firebase, copia **todo su contenido** y pégalo como el valor de esta variable en Koyeb.
-7. Haz clic en **Deploy**.
+   - `TIMEZONE`: `America/La_Paz` (o tu zona horaria local).
+   - `NOTIFICATION_HOUR`: `9`
+   - `NOTIFICATION_MINUTE`: `0`
+   - `FIREBASE_CREDENTIALS_JSON`: Abre tu archivo `serviceAccountKey.json` descargado de Firebase, copia **todo su contenido** en una sola línea y pégalo como el valor de esta variable en Render.
+6. Haz clic en **Deploy Web Service**.
 
-¡Listo! En menos de 2 minutos tu bot estará activo 24/7 en la nube sin costo alguno.
+---
+
+### Paso 3: Mantener Render despierto 24/7 (Gratis)
+Los Web Services gratuitos de Render entran en suspensión tras 15 minutos sin recibir visitas HTTP.
+Dado que nuestro bot incluye un servidor web en segundo plano respondiendo en `/`, puedes mantenerlo activo 24/7 de forma 100% gratuita:
+
+1. Copia la URL pública que Render le asigna a tu servicio (ej. `https://acordate-bot.onrender.com`).
+2. Crea una cuenta gratuita en [UptimeRobot.com](https://uptimerobot.com/) o [cron-job.org](https://cron-job.org/).
+3. Añade un nuevo monitor:
+   - **Tipo:** `HTTP(s)`
+   - **URL:** `https://acordate-bot.onrender.com/`
+   - **Intervalo de monitoreo:** cada **10 minutos**.
+4. ¡Listo! UptimeRobot enviará un ping ligero cada 10 minutos, impidiendo que Render se duerma y asegurando que tu bot de Telegram y sus alarmas diarias funcionen las 24 horas del día.
 
 ---
 
@@ -112,4 +128,3 @@ git push -u origin main
 | `/listar` | Muestra todos los pagos pendientes con botones para pagar o borrar |
 | `/test_alerta` | Ejecuta la comprobación de recordatorios inmediatamente para probar |
 | `/ayuda` | Muestra la guía rápida de uso |
-
